@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue Quiz App</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xxjapp/xdialog@3/xdialog.min.css">
+  <link rel="stylesheet" href="style.css"> <!-- Підключення стилів -->
+</head>
+<body>
+
+  <div id="app">
+    <div v-if="activePage === 'quiz'">
+      <div class="progress-bar" :style="{ width: pages.quiz.progress + '%' }"></div>
+      <div class="question-block" v-for="(question, index) in pages.quiz.questions" :key="index" v-if="index === pages.quiz.currentQuestion">
+        <div class="question">{{ question.question }}</div>
+        <template v-if="question.type === 'choice'">
+          <div class="options">
+            <button v-for="(option, i) in question.options" :key="i" @click="submitAnswer(index, option)">{{ option }}</button>
+          </div>
+        </template>
+        <template v-else-if="question.type === 'open'">
+          <form @submit.prevent="submitOpenAnswer(index)">
+            <input type="text" v-model="pages.quiz.openAnswer" placeholder="Введіть вашу відповідь" />
+            <button type="submit">OK</button>
+          </form>
+        </template>
+      </div>
+    </div>
+    
+    <div v-else-if="activePage === 'loader'">
+      <div class="preloader">
+        <div class="loader"></div>
+        <div class="loading-text">{{pages[activePage].pageTitle}}</div>
+      </div>
+    </div>
+  
+    <div v-else-if="activePage === 'results'">
+      <h1 class="page-title">{{pages[activePage].pageTitle}}</h1>
+
+      <div id="gift-carousel" class="gift-carousel">
+        <div v-for="gift in pages.results.gifts" :key="gift.id" class="gift-item" :class="pages.results.giftClasses + ' ' + (gift.hasOwnProperty('classes') ? gift.classes : '')"
+        :style="{ transform: 'translateY(' + ((pages.results.randomGiftIndex) * -100) + '%)' }">
+          <div class="gift-inner">
+            
+            <div :class="'gift-img gift-img-'+gift.id">
+
+            </div>
+            <div class="gift-name">{{ gift.name }}</div>
+          </div>
+        </div>
+        <div class="gift-item picker">
+
+        </div>
+      </div>
+
+      <div class="d-flex justify-center">
+        <button v-if="pages.results.suggestRespin && specificId === false" @click="reloadResults()">Не сподобалося? Перепідібрати!</button>
+      </div>
+    </div>
+
+
+    <component :is="'style'"  v-for="gift in pages.results.gifts">
+      .gift-img-{{gift.id}}{ background-image: url({{gift.img}}); }
+      </component>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/gh/xxjapp/xdialog@3/xdialog.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.2/tiny-slider.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.2/min/tiny-slider.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script> <!-- Підключення Vue.js -->
+  <script src="app.js"></script> <!-- Підключення JavaScript-логіки -->
+</body>
+</html>

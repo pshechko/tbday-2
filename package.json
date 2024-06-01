@@ -1,0 +1,15 @@
+{
+  "name": "tbday-2",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "compile:sass": "sass --watch style.scss style.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "sass": "^1.77.4"
+  }
+}
